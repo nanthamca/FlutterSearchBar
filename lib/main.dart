@@ -52,9 +52,13 @@ class _WikiSearchPageState extends State<WikiSearchPage> {
     super.initState();
   }
 
+  BuildContext context;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -83,7 +87,7 @@ class _WikiSearchPageState extends State<WikiSearchPage> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: "Search terms above 3 character",
+                      hintText: "Search terms above 2 character",
                       hintStyle: TextStyle(
                         color: Colors.black.withAlpha(120),
                       ),
@@ -96,7 +100,7 @@ class _WikiSearchPageState extends State<WikiSearchPage> {
                       } else {
                         isClose = false;
                       }
-                      if (keyword.length > 3) {
+                      if (keyword.length > 2) {
                         isShowRecent = false;
                         getApi(keyword);
                       } else {
@@ -211,10 +215,12 @@ class _WikiSearchPageState extends State<WikiSearchPage> {
             this.apiResponse = apiResponse;
           });
         } else {
-          print("Please check your internet connection");
+          final snackBar = SnackBar(content: Text('Please check your internet connection'));
+          _scaffoldKey.currentState.showSnackBar(snackBar);
         }
       } on Exception catch (_) {
-        print("Please check your internet connection");
+        final snackBar = SnackBar(content: Text('Please check your internet connection'));
+        _scaffoldKey.currentState.showSnackBar(snackBar);
       }
     }
   }
